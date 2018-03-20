@@ -12,8 +12,18 @@ const server = app.listen(4000, () => {
 app.use(express.static('public'));
 
 // Socket Setup
-const socketio = socket(server);
+const io = socket(server);
 
-socketio.on('connection', (socket) => {
+io.on('connection', (socket) => {
   console.log("Made connection socket", socket.id);
+
+  socket.on('chat', function(data){
+    io.sockets.emit('chat', data);
+  })
+
+  socket.on('typing', (data) => {
+    socket.broadcast.emit('typing', data);
+  })
+
+
 });
